@@ -419,3 +419,167 @@ body {
   text-align: center;
   color: #777;
 }
+.dashboard {
+  padding: 40px 20px;
+  max-width: 1100px;
+  margin: auto;
+}
+.applicant {
+  background: #f8f9ff;
+  padding: 8px;
+  margin: 5px 0;
+  border-radius: 6px;
+}
+/* Search Container */
+.search-container {
+  max-width: 900px;
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Search Input */
+.search-input {
+  padding: 12px 15px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 15px;
+  outline: none;
+  transition: 0.3s;
+}
+
+.search-input:focus {
+  border-color: #6c63ff;
+  box-shadow: 0 0 5px rgba(108, 99, 255, 0.4);
+}
+
+/* Filters Row */
+.filter-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Filter Inputs */
+.filter-input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  outline: none;
+  min-width: 150px;
+  transition: 0.3s;
+}
+
+.filter-input:focus {
+  border-color: #6c63ff;
+}
+
+/* Clear Button */
+.clear-btn {
+  background: #ff4d4f;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.clear-btn:hover {
+  background: #d9363e;
+}
+.dashboard {
+  padding: 40px;
+}
+
+.dashboard-title {
+  margin-bottom: 20px;
+}
+
+.no-task {
+  color: #777;
+}
+
+/* Modern Task Card */
+.task-card-modern {
+  background: white;
+  padding: 25px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+  transition: 0.3s;
+}
+
+.task-card-modern:hover {
+  transform: translateY(-5px);
+}
+
+/* Header */
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-header h3 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.deadline {
+  font-size: 13px;
+  color: #666;
+  background: #f5f5f5;
+  padding: 5px 10px;
+  border-radius: 10px;
+}
+
+/* Description */
+.task-desc {
+  margin: 15px 0;
+  color: #444;
+  line-height: 1.5;
+}
+
+/* Meta */
+.task-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.budget {
+  font-weight: 600;
+  color: #4f46e5;
+}
+
+/* Applicants */
+.applicants-section {
+  margin-top: 15px;
+}
+
+.applicants-section h4 {
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+
+/* Applicant chips */
+.applicant-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.applicant-chip {
+  background: #eef2ff;
+  color: #4f46e5;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+}
+
+.no-applicants {
+  color: #999;
+  font-size: 14px;
+}

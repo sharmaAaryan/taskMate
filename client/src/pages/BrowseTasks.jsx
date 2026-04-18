@@ -41,32 +41,46 @@ function BrowseTasks() {
     <div className="browse-container">
       <h2 className="browse-title">Available Tasks</h2>
 
-      {/* Search */}
-      <input
-        type="text"
-        placeholder="Search tasks..."
-        className="search-bar"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-
-      {/* Filters */}
-      <div className="filters">
+      {/* 🔍 Search + Filters */}
+      <div className="search-container">
         <input
-          type="number"
-          placeholder="Max Budget"
-          value={maxBudget}
-          onChange={(e) => setMaxBudget(e.target.value)}
+          type="text"
+          placeholder="🔍 Search tasks..."
+          className="search-input"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
         />
 
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-        />
+        <div className="filter-group">
+          <input
+            type="number"
+            placeholder="💰 Max Budget"
+            className="filter-input"
+            value={maxBudget}
+            onChange={(e) => setMaxBudget(e.target.value)}
+          />
+
+          <input
+            type="date"
+            className="filter-input"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
+
+          <button
+            className="clear-btn"
+            onClick={() => {
+              setSearch("");
+              setMaxBudget("");
+              setDate("");
+            }}
+          >
+            Clear
+          </button>
+        </div>
       </div>
 
-      {/* Tasks */}
+      {/* 📦 Task Cards */}
       <div className="task-grid">
         {tasks
           .filter((task) =>
@@ -91,8 +105,7 @@ function BrowseTasks() {
               <div className="task-info">
                 <span>💰 ₹{task.budget}</span>
                 <span>
-                  📅{" "}
-                  {new Date(task.deadline).toLocaleDateString()}
+                  📅 {new Date(task.deadline).toLocaleDateString()}
                 </span>
               </div>
 

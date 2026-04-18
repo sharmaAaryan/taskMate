@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "../App.css";
 
 function Login() {
@@ -32,13 +32,21 @@ function Login() {
       const data = await res.json();
 
       if (res.ok) {
-        // ✅ STORE BOTH
+        // ✅ Save data
         localStorage.setItem("token", data.token);
         localStorage.setItem("role", data.user.role);
         localStorage.setItem("userId", data.user.id);
 
-        navigate("/");
-        window.location.reload(); // ensures navbar updates
+        alert("Login Successful ✅");
+
+        // ✅ Role-based redirect
+        if (data.user.role === "user") {
+          navigate("/client-dashboard");
+        } else {
+          navigate("/volunteer-dashboard");
+        }
+
+        window.location.reload();
       } else {
         alert(data.message);
       }
@@ -51,13 +59,13 @@ function Login() {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2>Login to TaskMate</h2>
+        <h2>Login</h2>
 
         <form onSubmit={handleSubmit}>
           <input
             type="email"
             name="email"
-            placeholder="Enter your email"
+            placeholder="Enter Email"
             value={form.email}
             onChange={handleChange}
             required
@@ -66,7 +74,7 @@ function Login() {
           <input
             type="password"
             name="password"
-            placeholder="Enter your password"
+            placeholder="Enter Password"
             value={form.password}
             onChange={handleChange}
             required
@@ -76,6 +84,10 @@ function Login() {
             Login
           </button>
         </form>
+
+        <p className="switch-text">
+          Don't have an account? <Link to="/register">Register</Link>
+        </p>
       </div>
     </div>
   );

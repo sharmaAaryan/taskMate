@@ -6,6 +6,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Footer from "./components/Footer";
 import PostTask from "./pages/PostTask";
+import ClientDashboard from "./pages/ClientDashboard";
+import VolunteerDashboard from "./pages/VolunteerDashboard";
 function App() {
   return (
     <>
@@ -17,6 +19,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/post-task" element={<PostTask />} />
+        <Route path="/client-dashboard" element={<ClientDashboard />} />
+        <Route path="/volunteer-dashboard" element={<VolunteerDashboard />} />
       </Routes>
       <Footer />
       

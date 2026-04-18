@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import "../App.css";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -8,7 +9,7 @@ function Navbar() {
 
   const handleLogout = () => {
     localStorage.clear();
-    navigate("/login");
+    navigate("/");
     window.location.reload();
   };
 
@@ -19,24 +20,35 @@ function Navbar() {
       <nav>
         <Link to="/">Home</Link>
 
-        {/* 👇 ROLE BASED UI */}
+        {/* 👤 CLIENT */}
         {token && role === "user" && (
-          <Link to="/post-task">Post Task</Link>
+          <>
+            <Link to="/client-dashboard">Dashboard</Link>
+            <Link to="/post-task">Post Task</Link> {/* ✅ NEW */}
+          </>
         )}
 
+        {/* 🤝 VOLUNTEER */}
         {token && role === "helper" && (
-          <Link to="/browse">Browse Tasks</Link>
+          <>
+            <Link to="/volunteer-dashboard">Dashboard</Link>
+            <Link to="/browse">Browse Tasks</Link>
+          </>
         )}
 
-        {!token ? (
+        {/* NOT LOGGED IN */}
+        {!token && (
           <>
             <Link to="/login">Login</Link>
             <Link to="/register">
               <button className="register-btn">Register</button>
             </Link>
           </>
-        ) : (
-          <button className="register-btn" onClick={handleLogout}>
+        )}
+
+        {/* LOGOUT */}
+        {token && (
+          <button onClick={handleLogout} className="register-btn">
             Logout
           </button>
         )}
