@@ -7,18 +7,19 @@ function BrowseTasks() {
   const [maxBudget, setMaxBudget] = useState("");
   const [date, setDate] = useState("");
 
+  const userId = localStorage.getItem("userId");
+
   useEffect(() => {
+    const fetchTasks = async () => {
+      const res = await fetch("http://localhost:5000/api/tasks");
+      const data = await res.json();
+      setTasks(data);
+    };
+
     fetchTasks();
   }, []);
 
-  const fetchTasks = async () => {
-    const res = await fetch("http://localhost:5000/api/tasks");
-    const data = await res.json();
-    setTasks(data);
-  };
-
   const applyTask = async (taskId) => {
-    const userId = localStorage.getItem("userId");
 
     const res = await fetch("http://localhost:5000/api/apply", {
       method: "POST",
@@ -32,6 +33,7 @@ function BrowseTasks() {
 
     if (res.ok) {
       alert("Applied Successfully ✅");
+      setTasks((prev) => prev.filter((t) => t._id !== taskId));
     } else {
       alert(data.message);
     }
@@ -83,6 +85,8 @@ function BrowseTasks() {
       {/* 📦 Task Cards */}
       <div className="task-grid">
         {tasks
+          .filter((task) => !task.status || task.status === "open")
+          .filter((task) => !task.applicants?.some((app) => app.user === userId))
           .filter((task) =>
             task.title.toLowerCase().includes(search.toLowerCase())
           )

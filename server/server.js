@@ -5,6 +5,8 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes.js";
 import taskRoutes from "./routes/taskRoutes.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import notificationRoutes from "./routes/notificationRoutes.js";
 dotenv.config();
 
 const app = express();
@@ -17,6 +19,8 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/apply", applicationRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 /* Test Route */
 app.get("/", (req, res) => {

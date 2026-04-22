@@ -8,6 +8,9 @@ import Footer from "./components/Footer";
 import PostTask from "./pages/PostTask";
 import ClientDashboard from "./pages/ClientDashboard";
 import VolunteerDashboard from "./pages/VolunteerDashboard";
+import Profile from "./pages/Profile";
+import ViewProfile from "./pages/ViewProfile";
+
 function App() {
   return (
     <>
@@ -21,6 +24,8 @@ function App() {
         <Route path="/post-task" element={<PostTask />} />
         <Route path="/client-dashboard" element={<ClientDashboard />} />
         <Route path="/volunteer-dashboard" element={<VolunteerDashboard />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/user/:id" element={<ViewProfile />} />
       </Routes>
       <Footer />
       

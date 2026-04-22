@@ -1,10 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import "../App.css";
 
 function PostTask() {
-  const navigate = useNavigate();
-
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -25,7 +22,7 @@ const handleSubmit = async (e) => {
   const userId = localStorage.getItem("userId");
 
   try {
-    const res = await fetch("http://localhost:5000/api/tasks", {
+    const res = await fetch("http://localhost:5000/api/tasks/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

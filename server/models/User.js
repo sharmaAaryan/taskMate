@@ -20,6 +20,26 @@ const userSchema = new mongoose.Schema(
       enum: ["user", "helper"], // client or volunteer
       default: "user",
     },
+    bio: {
+      type: String,
+      default: "",
+    },
+    skills: {
+      type: [String],
+      default: [],
+    },
+    ratings: [
+      {
+        score: { type: Number, required: true },
+        review: { type: String },
+        taskId: { type: mongoose.Schema.Types.ObjectId, ref: "Task" },
+        byUser: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      },
+    ],
+    walletBalance: {
+      type: Number,
+      default: 50000, // 50,000 INR starting fake money
+    },
   },
   { timestamps: true }
 );
