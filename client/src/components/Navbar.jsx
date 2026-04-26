@@ -11,6 +11,7 @@ function Navbar() {
 
   const [notifications, setNotifications] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const [walletBalance, setWalletBalance] = useState(null);
 
   useEffect(() => {
@@ -83,6 +84,13 @@ function Navbar() {
           </>
         )}
 
+        {/* 👑 ADMIN */}
+        {token && role === "admin" && (
+          <>
+            <Link to="/admin-dashboard">Admin Dashboard</Link>
+          </>
+        )}
+
         {/* NOT LOGGED IN */}
         {!token && (
           <>
@@ -93,54 +101,67 @@ function Navbar() {
           </>
         )}
 
-        {/* LOGOUT & PROFILE & NOTIFICATIONS */}
+        {/* LOGOUT & WIDGETS */}
         {token && (
           <div className="nav-right">
             
-            {/* 💰 Wallet Balance */}
-            {walletBalance !== null && (
-              <div className="wallet-badge">
-                💳 ₹{walletBalance}
-              </div>
-            )}
 
-            {/* 🔔 Notifications Bell (CLIENT ONLY) */}
-            {role === "user" && (
+
+            {/* Account Dropdown */}
+            {role !== "admin" && (
               <div className="notification-wrapper">
-                <div 
-                  className="notification-bell" 
-                  onClick={() => setShowDropdown(!showDropdown)}
+                  <div className="user-menu-trigger" 
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "8px", padding: "8px 15px", background: "#f8f9ff", borderRadius: "20px", fontWeight: "600", color: "#334155", position: "relative" }}
                 >
-                  🔔
-                  {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
+                  <span>Account ▾</span>
+                  {role === "user" && unreadCount > 0 && (
+                    <span style={{ background: "red", color: "white", borderRadius: "50%", padding: "2px 6px", fontSize: "11px", position: "absolute", top: "-5px", right: "-5px" }}>{unreadCount}</span>
+                  )}
                 </div>
 
-                {showDropdown && (
-                  <div className="notification-dropdown">
-                    <h4>Notifications</h4>
-                    {notifications.length === 0 ? (
-                      <p className="no-notifs">No notifications yet.</p>
-                    ) : (
-                      notifications.map((n) => (
-                        <div 
-                          key={n._id} 
-                          className={`notif-item ${!n.isRead ? "unread" : ""}`}
-                          onClick={() => markAsRead(n._id)}
-                        >
-                          <p>{n.message}</p>
-                          <span className="notif-time">
-                            {new Date(n.createdAt).toLocaleDateString()}
-                          </span>
-                        </div>
-                      ))
+                {showUserMenu && (
+                  <div className="notification-dropdown" style={{ right: 0, minWidth: "200px", padding: "10px" }}>
+                    {walletBalance !== null && (
+                      <div style={{ padding: "10px", borderBottom: "1px solid #eee", marginBottom: "5px" }}>
+                        <span style={{ fontSize: "13px", color: "#64748b" }}>Available Balance</span>
+                        <br />
+                        <span style={{ color: "#16a34a", fontWeight: "bold", fontSize: "16px" }}>💳 ₹{walletBalance}</span>
+                      </div>
+                    )}
+                    
+                    <Link to="/profile" style={{ display: "block", padding: "10px", color: "#334155", textDecoration: "none", transition: "0.2s" }} onClick={() => setShowUserMenu(false)}>👤 Profile</Link>
+                    <Link to="/transactions" style={{ display: "block", padding: "10px", color: "#334155", textDecoration: "none", transition: "0.2s" }} onClick={() => setShowUserMenu(false)}>📜 Transactions</Link>
+                    <Link to="/support" style={{ display: "block", padding: "10px", color: "#334155", textDecoration: "none", transition: "0.2s" }} onClick={() => setShowUserMenu(false)}>🎧 Support / Complaints</Link>
+
+                    {/* Notifications Section */}
+                    {role === "user" && (
+                      <div style={{ padding: "10px", borderTop: "1px solid #eee", marginTop: "5px" }}>
+                        <span style={{ fontSize: "13px", color: "#64748b", fontWeight: "bold" }}>🔔 Notifications</span>
+                        {notifications.length === 0 ? (
+                          <p style={{ fontSize: "13px", color: "#999", marginTop: "5px" }}>No notifications yet.</p>
+                        ) : (
+                          <div style={{ maxHeight: "150px", overflowY: "auto", marginTop: "10px", display: "flex", flexDirection: "column", gap: "8px" }}>
+                            {notifications.map((n) => (
+                              <div 
+                                key={n._id} 
+                                onClick={() => markAsRead(n._id)}
+                                style={{ padding: "8px", background: n.isRead ? "#f8f9fa" : "#eef2ff", borderRadius: "6px", cursor: "pointer", fontSize: "13px" }}
+                              >
+                                <p style={{ margin: 0, color: n.isRead ? "#555" : "#111", fontWeight: n.isRead ? "normal" : "600" }}>{n.message}</p>
+                                <span style={{ fontSize: "11px", color: "#888" }}>{new Date(n.createdAt).toLocaleDateString()}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     )}
                   </div>
                 )}
               </div>
             )}
 
-            <Link to="/profile" className="profile-link">Profile</Link>
-            <button onClick={handleLogout} className="register-btn">
+            <button onClick={handleLogout} className="register-btn" style={{ marginLeft: "15px" }}>
               Logout
             </button>
           </div>

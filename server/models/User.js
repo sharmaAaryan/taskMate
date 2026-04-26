@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["user", "helper"], // client or volunteer
+      enum: ["user", "helper", "admin"], // client, volunteer, or admin
       default: "user",
     },
     bio: {
@@ -39,6 +39,10 @@ const userSchema = new mongoose.Schema(
     walletBalance: {
       type: Number,
       default: 50000, // 50,000 INR starting fake money
+    },
+    isApproved: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }

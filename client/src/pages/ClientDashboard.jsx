@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../App.css";
 
 function ClientDashboard() {
   const [tasks, setTasks] = useState([]);
   const [refresh, setRefresh] = useState(0);
   const userId = localStorage.getItem("userId");
+  const navigate = useNavigate();
 
   // State for Task Completion Flow
   const [completingTask, setCompletingTask] = useState(null);
@@ -225,12 +226,20 @@ function ClientDashboard() {
                   <p>🚀 This task is currently assigned and in progress.</p>
                   
                   {completingTask !== task._id ? (
-                    <button 
-                      className="primary mt-10" 
-                      onClick={() => setCompletingTask(task._id)}
-                    >
-                      Mark as Completed
-                    </button>
+                    <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+                      <button 
+                        className="primary" 
+                        onClick={() => setCompletingTask(task._id)}
+                      >
+                        Mark as Completed
+                      </button>
+                      <button
+                        className="secondary"
+                        onClick={() => navigate(`/chat/${task._id}`)}
+                      >
+                        Chat 💬
+                      </button>
+                    </div>
                   ) : (
                     <div className="review-box mt-10">
                       <h4>Review the Volunteer</h4>
@@ -261,7 +270,7 @@ function ClientDashboard() {
                           className="accept-btn"
                           onClick={() => handleComplete(task._id)}
                         >
-                          Submit & Complete
+                          Complete & Pay
                         </button>
                         <button 
                           className="reject-btn"

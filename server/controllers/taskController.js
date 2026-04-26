@@ -1,5 +1,6 @@
 import Task from "../models/Task.js";
 import User from "../models/User.js";
+import Transaction from "../models/Transaction.js";
 
 export const createTask = async (req, res) => {
   try {
@@ -56,6 +57,15 @@ export const acceptApplicant = async (req, res) => {
     // Deduct from Client (Hold in Escrow)
     client.walletBalance -= task.budget;
     await client.save();
+
+    await Transaction.create({
+      user: client._id,
+      type: "escrow_deduction",
+      amount: task.budget,
+      description: `Held in escrow for task: ${task.title}`,
+      taskId: task._id,
+      relatedUser: userId,
+    });
 
     task.selectedVolunteer = userId;
     task.status = "in-progress";
@@ -115,6 +125,15 @@ export const completeTask = async (req, res) => {
         // Release Escrow to Volunteer
         volunteer.walletBalance += task.budget;
 
+        await Transaction.create({
+          user: volunteer._id,
+          type: "credit",
+          amount: task.budget,
+          description: `Payment received for completing task: ${task.title}`,
+          taskId: task._id,
+          relatedUser: task.createdBy,
+        });
+
         if (score) {
           volunteer.ratings.push({
             score: Number(score),
@@ -149,6 +168,21 @@ export const deleteTask = async (req, res) => {
     await Task.findByIdAndDelete(req.params.id);
 
     res.json({ message: "Task deleted successfully 🗑️" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+/* Get Task By ID */
+export const getTaskById = async (req, res) => {
+  try {
+    const task = await Task.findById(req.params.id)
+      .populate("createdBy", "name email")
+      .populate("selectedVolunteer", "name email");
+      
+    if (!task) return res.status(404).json({ message: "Task not found" });
+    
+    res.status(200).json(task);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

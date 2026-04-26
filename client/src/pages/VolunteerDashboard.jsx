@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../App.css";
 
 function VolunteerDashboard() {
   const [applications, setApplications] = useState([]);
   const userId = localStorage.getItem("userId");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMyApplications = async () => {
@@ -55,6 +57,16 @@ function VolunteerDashboard() {
                   Applied: {new Date(appliedAt).toLocaleDateString()}
                 </span>
               </div>
+
+              {status.toLowerCase() === "accepted" && (
+                <button
+                  className="secondary mt-10"
+                  onClick={() => navigate(`/chat/${task._id}`)}
+                  style={{ width: "100%", padding: "10px" }}
+                >
+                  Chat with Client 💬
+                </button>
+              )}
             </div>
           ))}
         </div>

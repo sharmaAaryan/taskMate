@@ -5,12 +5,14 @@ import {
   rejectApplicant,
   createTask,
   completeTask,
-  deleteTask
+  deleteTask,
+  getTaskById
 } from "../controllers/taskController.js";
 
 const router = express.Router();
 
 router.get("/", getTasks);
+router.get("/:id", getTaskById);
 router.post("/create", createTask);
 router.post("/accept", acceptApplicant);
 router.post("/reject", rejectApplicant);

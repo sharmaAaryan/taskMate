@@ -16,12 +16,21 @@ export const registerUser = async (req, res) => {
     // hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Check if registering user matches the ADMIN_EMAIL
+    let finalRole = role || "user";
+    let isApproved = false;
+    if (process.env.ADMIN_EMAIL && email === process.env.ADMIN_EMAIL) {
+      finalRole = "admin";
+      isApproved = true;
+    }
+
     // create user
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
-      role: role || "user", // default if not provided
+      role: finalRole,
+      isApproved,
     });
 
     // create token
@@ -63,9 +72,30 @@ export const loginUser = async (req, res) => {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
+    // Check if user is approved
+    if (!user.isApproved && user.role !== "admin") {
+      // Allow admin email to bypass and auto-approve just in case
+      if (!(process.env.ADMIN_EMAIL && user.email === process.env.ADMIN_EMAIL)) {
+        return res.status(403).json({ message: "Account pending admin approval." });
+      }
+    }
+
+    // Check if user is the designated admin in .env via email
+    let finalRole = user.role;
+    if (process.env.ADMIN_EMAIL && user.email === process.env.ADMIN_EMAIL) {
+      finalRole = "admin";
+      
+      // Optionally update the DB so their role is permanently admin and approved
+      if (user.role !== "admin" || !user.isApproved) {
+        user.role = "admin";
+        user.isApproved = true;
+        await user.save();
+      }
+    }
+
     // create token
     const token = jwt.sign(
-      { id: user._id, role: user.role },
+      { id: user._id, role: finalRole },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
@@ -77,7 +107,7 @@ export const loginUser = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role,
+        role: finalRole,
       },
     });
   } catch (error) {
