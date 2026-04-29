@@ -1,6 +1,30 @@
+import { Link } from "react-router-dom";
 import "../App.css";
 
 function Home() {
+  const role = localStorage.getItem("role");
+
+  if (role === "admin") {
+    return (
+      <section className="hero" style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <h1>
+          Platform <span>Control Center</span>
+        </h1>
+        <p style={{ fontSize: '18px', maxWidth: '800px', margin: '20px auto' }}>
+          Welcome, Administrator. Oversee platform operations, manage new user approvals, and monitor system escrows securely to maintain a healthy ecosystem.
+        </p>
+
+        <div className="buttons" style={{ marginTop: '40px' }}>
+          <Link to="/admin-dashboard">
+            <button className="primary" style={{ padding: '15px 30px', fontSize: '18px', borderRadius: '8px' }}>
+              Access Admin Dashboard 🛡️
+            </button>
+          </Link>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <>
       <section className="hero">

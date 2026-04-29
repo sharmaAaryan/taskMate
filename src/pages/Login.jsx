@@ -40,7 +40,9 @@ function Login() {
         alert("Login Successful ✅");
 
         // ✅ Role-based redirect
-        if (data.user.role === "user") {
+        if (data.user.role === "admin") {
+          navigate("/admin-dashboard");
+        } else if (data.user.role === "user") {
           navigate("/client-dashboard");
         } else {
           navigate("/volunteer-dashboard");
