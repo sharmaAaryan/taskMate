@@ -44,6 +44,15 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    accountStatus: {
+      type: String,
+      enum: ["active", "temporarily_blocked", "permanently_banned"],
+      default: "active",
+    },
+    strikes: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );

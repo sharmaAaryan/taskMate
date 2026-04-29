@@ -3,10 +3,18 @@ import Complaint from "../models/Complaint.js";
 // For Clients/Volunteers to submit a complaint
 export const submitComplaint = async (req, res) => {
   try {
-    const { userId, subject, description } = req.body;
+    const { userId, againstUserEmail, subject, description } = req.body;
+
+    const User = (await import("../models/User.js")).default;
+    const againstUserDoc = await User.findOne({ email: againstUserEmail });
+
+    if (!againstUserDoc) {
+      return res.status(404).json({ message: "User with this email not found." });
+    }
 
     const complaint = await Complaint.create({
       user: userId,
+      againstUser: againstUserDoc._id,
       subject,
       description,
     });
@@ -22,6 +30,7 @@ export const getAllComplaints = async (req, res) => {
   try {
     const complaints = await Complaint.find()
       .populate("user", "name email role")
+      .populate("againstUser", "name email role")
       .sort({ createdAt: -1 });
 
     res.status(200).json(complaints);

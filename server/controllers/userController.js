@@ -32,3 +32,20 @@ export const updateUserProfile = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+export const addFunds = async (req, res) => {
+  try {
+    const { amount } = req.body;
+    if (!amount || amount <= 0) return res.status(400).json({ message: "Invalid amount" });
+
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    user.walletBalance += Number(amount);
+    await user.save();
+
+    res.status(200).json({ message: "Funds added successfully", walletBalance: user.walletBalance });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};

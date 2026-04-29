@@ -33,6 +33,14 @@ const taskSchema = new mongoose.Schema(
       enum: ["open", "in-progress", "completed"],
       default: "open",
     },
+
+    progressReports: [
+      {
+        description: String,
+        fileUrl: String,
+        submittedAt: { type: Date, default: Date.now }
+      }
+    ]
   },
   { timestamps: true }
 );

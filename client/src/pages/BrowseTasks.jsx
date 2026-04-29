@@ -6,6 +6,7 @@ function BrowseTasks() {
   const [search, setSearch] = useState("");
   const [maxBudget, setMaxBudget] = useState("");
   const [date, setDate] = useState("");
+  const [selectedTask, setSelectedTask] = useState(null);
 
   const userId = localStorage.getItem("userId");
 
@@ -104,7 +105,30 @@ function BrowseTasks() {
                 👤 {task.createdBy?.name || "Unknown"}
               </p>
 
-              <p className="desc">{task.description}</p>
+              <div className="task-desc-container">
+                <p 
+                  className="desc" 
+                  style={{ 
+                    display: '-webkit-box', 
+                    WebkitLineClamp: 3, 
+                    WebkitBoxOrient: 'vertical', 
+                    overflow: 'hidden',
+                    whiteSpace: 'pre-wrap',
+                    margin: '10px 0',
+                    lineHeight: '1.5'
+                  }}
+                >
+                  {task.description}
+                </p>
+                {task.description && task.description.length > 150 && (
+                  <button 
+                    onClick={() => setSelectedTask(task)}
+                    style={{ background: 'none', border: 'none', color: '#6366f1', cursor: 'pointer', padding: '0', fontSize: '13px', fontWeight: '600', marginBottom: '15px' }}
+                  >
+                    View Details
+                  </button>
+                )}
+              </div>
 
               <div className="task-info">
                 <span>💰 ₹{task.budget}</span>
@@ -122,6 +146,47 @@ function BrowseTasks() {
             </div>
           ))}
       </div>
+
+      {/* Task Details Modal */}
+      {selectedTask && (
+        <div className="modal-overlay" style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000, animation: 'fadeIn 0.2s ease-out' }}>
+          <div className="modal-content" style={{ backgroundColor: '#fff', padding: '30px', borderRadius: '20px', width: '95%', maxWidth: '700px', maxHeight: '85vh', display: 'flex', flexDirection: 'column', boxShadow: '0 20px 40px rgba(0,0,0,0.2)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px', paddingBottom: '15px', borderBottom: '2px solid #f1f5f9' }}>
+              <div>
+                <h3 style={{ margin: 0, fontSize: '24px', color: '#1e293b' }}>
+                  {selectedTask.title}
+                </h3>
+                <p style={{ margin: '5px 0 0 0', color: '#64748b', fontSize: '14px' }}>Posted by: {selectedTask.createdBy?.name || "Unknown"}</p>
+              </div>
+              <button onClick={() => setSelectedTask(null)} style={{ background: '#f1f5f9', border: 'none', width: '40px', height: '40px', borderRadius: '50%', fontSize: '24px', cursor: 'pointer', color: '#64748b', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.2s', flexShrink: 0 }} onMouseEnter={(e) => e.currentTarget.style.background = '#e2e8f0'} onMouseLeave={(e) => e.currentTarget.style.background = '#f1f5f9'}>
+                &times;
+              </button>
+            </div>
+            
+            <div style={{ overflowY: 'auto', padding: '10px 0', whiteSpace: 'pre-wrap', lineHeight: '1.6', color: '#334155', fontSize: '15px', flex: 1 }}>
+              {selectedTask.description}
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px', paddingTop: '15px', borderTop: '1px solid #f1f5f9' }}>
+               <div>
+                 <span style={{ fontWeight: '600', color: '#10b981', fontSize: '16px', marginRight: '15px' }}>💰 ₹{selectedTask.budget}</span>
+                 <span style={{ color: '#64748b', fontSize: '14px' }}>📅 {new Date(selectedTask.deadline).toLocaleDateString()}</span>
+               </div>
+               <button
+                 onClick={() => {
+                    applyTask(selectedTask._id);
+                    setSelectedTask(null);
+                 }}
+                 style={{ background: '#5a5af7', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', transition: '0.2s' }}
+                 onMouseEnter={(e) => e.currentTarget.style.background = '#4444dd'}
+                 onMouseLeave={(e) => e.currentTarget.style.background = '#5a5af7'}
+               >
+                 Apply Now
+               </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

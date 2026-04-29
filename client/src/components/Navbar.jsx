@@ -124,9 +124,38 @@ function Navbar() {
                   <div className="notification-dropdown" style={{ right: 0, minWidth: "200px", padding: "10px" }}>
                     {walletBalance !== null && (
                       <div style={{ padding: "10px", borderBottom: "1px solid #eee", marginBottom: "5px" }}>
-                        <span style={{ fontSize: "13px", color: "#64748b" }}>Available Balance</span>
-                        <br />
-                        <span style={{ color: "#16a34a", fontWeight: "bold", fontSize: "16px" }}>💳 ₹{walletBalance}</span>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                          <div>
+                            <span style={{ fontSize: "13px", color: "#64748b" }}>Available Balance</span>
+                            <br />
+                            <span style={{ color: "#16a34a", fontWeight: "bold", fontSize: "16px" }}>💳 ₹{walletBalance}</span>
+                          </div>
+                          {role === "user" && (
+                            <button 
+                              onClick={() => {
+                                const amount = prompt("Enter amount to add to wallet (INR):");
+                                if (amount && !isNaN(amount) && Number(amount) > 0) {
+                                  fetch(`http://localhost:5000/api/users/${userId}/add-funds`, {
+                                    method: "POST",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({ amount: Number(amount) })
+                                  })
+                                  .then(res => res.json())
+                                  .then(data => {
+                                    if (data.walletBalance !== undefined) {
+                                      setWalletBalance(data.walletBalance);
+                                      alert("Funds added successfully!");
+                                    }
+                                  })
+                                  .catch(err => console.error("Error adding funds", err));
+                                }
+                              }}
+                              style={{ background: "#3b82f6", color: "white", border: "none", borderRadius: "4px", padding: "4px 8px", fontSize: "12px", cursor: "pointer" }}
+                            >
+                              + Add
+                            </button>
+                          )}
+                        </div>
                       </div>
                     )}
                     

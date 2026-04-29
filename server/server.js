@@ -11,6 +11,8 @@ import transactionRoutes from "./routes/transactionRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import complaintRoutes from "./routes/complaintRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
+import aiRoutes from "./routes/aiRoutes.js";
+import { startCronJobs } from "./utils/cronJobs.js";
 import http from "http";
 import { Server } from "socket.io";
 import Message from "./models/Message.js";
@@ -39,6 +41,7 @@ app.use("/api/transactions", transactionRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/complaints", complaintRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/ai", aiRoutes);
 
 /* Test Route */
 app.get("/", (req, res) => {
@@ -48,7 +51,10 @@ app.get("/", (req, res) => {
 /* MongoDB Connection */
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Connected Successfully"))
+  .then(() => {
+    console.log("MongoDB Connected Successfully");
+    startCronJobs(); // Initialize Cron Jobs
+  })
   .catch((err) => console.log(err));
 
 /* Socket.IO Chat Logic */

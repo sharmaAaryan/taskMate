@@ -2,6 +2,7 @@ import { useState } from "react";
 import "../App.css";
 
 const SubmitComplaint = () => {
+  const [againstUserEmail, setAgainstUserEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
@@ -9,17 +10,25 @@ const SubmitComplaint = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!subject || !description) return alert("Please fill in all fields.");
+    if (!subject || !description || !againstUserEmail) return alert("Please fill in all fields.");
     setLoading(true);
 
     try {
       const res = await fetch("http://localhost:5000/api/complaints", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, subject, description }),
+        body: JSON.stringify({ userId, againstUserEmail, subject, description }),
       });
       const data = await res.json();
+      
+      if (!res.ok) {
+        alert(data.message);
+        setLoading(false);
+        return;
+      }
+
       alert(data.message);
+      setAgainstUserEmail("");
       setSubject("");
       setDescription("");
     } catch (error) {
@@ -43,6 +52,13 @@ const SubmitComplaint = () => {
         </p>
         
         <form onSubmit={handleSubmit}>
+          <input
+            type="email"
+            placeholder="Email of user you are complaining against"
+            value={againstUserEmail}
+            onChange={(e) => setAgainstUserEmail(e.target.value)}
+            required
+          />
           <input
             type="text"
             placeholder="Subject of Issue"

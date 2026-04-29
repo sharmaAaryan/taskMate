@@ -6,7 +6,8 @@ import {
   createTask,
   completeTask,
   deleteTask,
-  getTaskById
+  getTaskById,
+  submitProgress
 } from "../controllers/taskController.js";
 
 const router = express.Router();
@@ -17,6 +18,7 @@ router.post("/create", createTask);
 router.post("/accept", acceptApplicant);
 router.post("/reject", rejectApplicant);
 router.post("/complete", completeTask);
+router.post("/progress", submitProgress);
 router.delete("/:id", deleteTask);
 
 export default router;

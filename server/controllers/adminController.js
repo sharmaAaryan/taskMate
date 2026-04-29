@@ -33,7 +33,7 @@ export const approveUser = async (req, res) => {
 
     user.isApproved = true;
     await user.save();
-    
+
     res.json({ message: "User approved successfully ✅" });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -46,6 +46,24 @@ export const rejectUser = async (req, res) => {
     if (!user) return res.status(404).json({ message: "User not found" });
 
     res.json({ message: "User rejected and removed ❌" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const unblockUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    if (user.accountStatus === "permanently_banned") {
+      return res.status(403).json({ message: "User is permanently banned and cannot be unblocked." });
+    }
+
+    user.accountStatus = "active";
+    await user.save();
+
+    res.json({ message: "User unblocked successfully ✅" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

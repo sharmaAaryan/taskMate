@@ -26,6 +26,10 @@ export const applyTask = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    if (user.accountStatus === "temporarily_blocked" || user.accountStatus === "permanently_banned") {
+      return res.status(403).json({ message: `You cannot apply for tasks. Your account is ${user.accountStatus.replace('_', ' ')}.` });
+    }
+
     // Add applicant to task
     task.applicants.push({ user: userId, name: user.name });
     await task.save();

@@ -187,3 +187,31 @@ export const getTaskById = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+/* Submit Progress Report */
+export const submitProgress = async (req, res) => {
+  const { taskId, description, fileUrl } = req.body;
+
+  try {
+    const task = await Task.findById(taskId);
+
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    if (task.status !== "in-progress") {
+      return res.status(400).json({ message: "Can only submit progress for in-progress tasks" });
+    }
+
+    task.progressReports.push({
+      description,
+      fileUrl
+    });
+
+    await task.save();
+
+    res.json({ message: "Progress Report Submitted! 🚀", task });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
