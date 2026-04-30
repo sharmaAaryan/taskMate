@@ -7,18 +7,38 @@ function BrowseTasks() {
   const [maxBudget, setMaxBudget] = useState("");
   const [date, setDate] = useState("");
   const [selectedTask, setSelectedTask] = useState(null);
+  const [hasActiveTask, setHasActiveTask] = useState(false);
 
   const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     const fetchTasks = async () => {
-      const res = await fetch("http://localhost:5000/api/tasks");
-      const data = await res.json();
-      setTasks(data);
+      try {
+        const res = await fetch("http://localhost:5000/api/tasks");
+        const data = await res.json();
+        setTasks(data);
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      }
+    };
+
+    const fetchMyApplications = async () => {
+      if (!userId) return;
+      try {
+        const res = await fetch(`http://localhost:5000/api/apply/user/${userId}`);
+        if (res.ok) {
+          const data = await res.json();
+          const active = data.some(app => ["pending", "accepted", "in-progress"].includes(app.status.toLowerCase()));
+          setHasActiveTask(active);
+        }
+      } catch (error) {
+        console.error("Error fetching applications:", error);
+      }
     };
 
     fetchTasks();
-  }, []);
+    fetchMyApplications();
+  }, [userId]);
 
   const applyTask = async (taskId) => {
 
@@ -35,6 +55,7 @@ function BrowseTasks() {
     if (res.ok) {
       alert("Applied Successfully ✅");
       setTasks((prev) => prev.filter((t) => t._id !== taskId));
+      setHasActiveTask(true);
     } else {
       alert(data.message);
     }
@@ -43,6 +64,12 @@ function BrowseTasks() {
   return (
     <div className="browse-container">
       <h2 className="browse-title">Available Tasks</h2>
+
+      {hasActiveTask && (
+        <div style={{ backgroundColor: '#fee2e2', color: '#b91c1c', padding: '15px', borderRadius: '10px', textAlign: 'center', marginBottom: '20px', fontWeight: 'bold' }}>
+          🚨 You already have an active application or ongoing task! Please complete it before applying for new ones.
+        </div>
+      )}
 
       {/* 🔍 Search + Filters */}
       <div className="search-container">
@@ -98,7 +125,11 @@ function BrowseTasks() {
             date ? new Date(task.deadline) <= new Date(date) : true
           )
           .map((task) => (
-            <div key={task._id} className="task-card-premium">
+            <div 
+              key={task._id} 
+              className="task-card-premium"
+              style={hasActiveTask ? { filter: 'blur(3px)', opacity: 0.7, pointerEvents: 'none' } : {}}
+            >
               <h3>{task.title}</h3>
 
               <p className="posted-by">

@@ -30,6 +30,24 @@ export const applyTask = async (req, res) => {
       return res.status(403).json({ message: `You cannot apply for tasks. Your account is ${user.accountStatus.replace('_', ' ')}.` });
     }
 
+    // Check if volunteer has any other active task/application
+    const existingApps = await Application.find({ userId });
+    for (let app of existingApps) {
+      const existingTask = await Task.findById(app.taskId);
+      if (existingTask && existingTask.status !== "completed") {
+        let isRejected = false;
+        if (existingTask.selectedVolunteer && existingTask.selectedVolunteer.toString() !== userId) {
+          isRejected = true;
+        } else if (!existingTask.selectedVolunteer && !existingTask.applicants.some(a => a.user.toString() === userId)) {
+          isRejected = true;
+        }
+        
+        if (!isRejected) {
+          return res.status(400).json({ message: "You already have an active application or ongoing task. Please complete it first." });
+        }
+      }
+    }
+
     // Add applicant to task
     task.applicants.push({ user: userId, name: user.name });
     await task.save();
