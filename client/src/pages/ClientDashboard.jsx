@@ -19,6 +19,11 @@ function ClientDashboard() {
   // Selected Task State (Modal)
   const [selectedTask, setSelectedTask] = useState(null);
 
+  // Update Task State
+  const [updatingTask, setUpdatingTask] = useState(null);
+  const [newBudget, setNewBudget] = useState("");
+  const [newDeadline, setNewDeadline] = useState("");
+
   useEffect(() => {
     const fetchMyTasks = async () => {
       try {
@@ -110,11 +115,39 @@ function ClientDashboard() {
     }
   };
 
+  /* 🔄 Update Expired Task */
+  const handleUpdateTask = async (taskId) => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/tasks/update-expired/${taskId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ budget: newBudget, deadline: newDeadline }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.message);
+        return;
+      }
+      alert(data.message);
+      setUpdatingTask(null);
+      setRefresh((prev) => prev + 1);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const filteredTasks = tasks.filter((task) => {
     if (activeTab === "all") return true;
     const stat = task.status || "open";
     return stat === activeTab;
   });
+
+  const isOverdue = (deadline) => {
+    if (!deadline) return false;
+    const dl = new Date(deadline);
+    dl.setHours(23, 59, 59, 999);
+    return new Date() > dl;
+  };
 
   return (
     <div className="dashboard">
@@ -169,9 +202,16 @@ function ClientDashboard() {
                   </button>
                 )}
               </div>
-              <span className={`status-badge ${task.status || "open"}`}>
-                {task.status || "open"}
-              </span>
+              <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                {task.status === "in-progress" && isOverdue(task.deadline) && (
+                  <span style={{ backgroundColor: "#fee2e2", color: "#b91c1c", padding: "5px 12px", borderRadius: "20px", fontSize: "12px", fontWeight: "600" }}>
+                    ⚠️ OVERDUE
+                  </span>
+                )}
+                <span className={`status-badge ${task.status || "open"}`}>
+                  {task.status || "open"}
+                </span>
+              </div>
             </div>
 
             {/* Description */}
@@ -210,34 +250,73 @@ function ClientDashboard() {
 
             {/* Conditional Rendering based on Status */}
             
-            {/* 1. If Open -> Show Applicants */}
-            {(task.status === "open" || !task.status) && (
+            {/* 1. If Open or In-Progress -> Show Applicants */}
+            {(task.status === "open" || task.status === "in-progress" || !task.status) && (
               <div className="applicants-section mt-15">
+                {isOverdue(task.deadline) && (
+                  <div className="overdue-update-section">
+                    <p className="overdue-warning-text">⚠️ Task deadline has passed without being accepted.</p>
+                    {updatingTask !== task._id ? (
+                      <button className="primary btn-sm" onClick={() => { setUpdatingTask(task._id); setNewBudget(task.budget); setNewDeadline(task.deadline.split('T')[0]); }}>
+                        Update Deadline & Budget
+                      </button>
+                    ) : (
+                      <div className="update-form">
+                        <div className="update-form-row">
+                          <div className="update-form-group">
+                            <label className="update-form-label">New Budget (₹)</label>
+                            <input type="number" className="update-form-input" value={newBudget} onChange={(e) => setNewBudget(e.target.value)} />
+                          </div>
+                          <div className="update-form-group">
+                            <label className="update-form-label">New Deadline</label>
+                            <input type="date" className="update-form-input" value={newDeadline} onChange={(e) => setNewDeadline(e.target.value)} />
+                          </div>
+                        </div>
+                        <div className="update-form-actions">
+                          <button className="accept-btn" onClick={() => handleUpdateTask(task._id)}>Save Changes</button>
+                          <button className="reject-btn" onClick={() => setUpdatingTask(null)}>Cancel</button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
                 <h4>Applicants</h4>
                 {task.applicants && task.applicants.length > 0 ? (
                   <div className="applicant-list">
-                    {task.applicants.map((app, index) => (
-                      <div key={index} className="applicant-card">
-                        <span>👤 {app.name || "User"}</span>
+                    {task.applicants.map((app, index) => {
+                      const isAccepted = task.selectedVolunteers?.includes(app.user);
+                      return (
+                      <div key={index} className={`applicant-card ${isAccepted ? 'accepted-card' : ''}`}>
+                        <div className="applicant-card-header">
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span style={{ fontSize: '18px' }}>👤</span>
+                            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '120px' }}>{app.name || "User"}</span>
+                          </div>
+                          {isAccepted && <span className="accepted-badge">✓ Accepted</span>}
+                        </div>
                         <div className="applicant-actions">
                           <Link to={`/user/${app.user}`} className="view-profile-btn">
                             View Profile
                           </Link>
-                          <button
-                            className="accept-btn"
-                            onClick={() => handleAccept(task._id, app.user)}
-                          >
-                            Accept
-                          </button>
-                          <button
-                            className="reject-btn"
-                            onClick={() => handleReject(task._id, app.user)}
-                          >
-                            Reject
-                          </button>
+                          {!isAccepted && (
+                            <div className="applicant-actions-row">
+                              <button
+                                className="accept-btn action-btn"
+                                onClick={() => handleAccept(task._id, app.user)}
+                              >
+                                Accept
+                              </button>
+                              <button
+                                className="reject-btn action-btn"
+                                onClick={() => handleReject(task._id, app.user)}
+                              >
+                                Reject
+                              </button>
+                            </div>
+                          )}
                         </div>
                       </div>
-                    ))}
+                    )})}
                   </div>
                 ) : (
                   <p className="no-applicants">No applicants yet.</p>
@@ -248,8 +327,8 @@ function ClientDashboard() {
             {/* 2. If In-Progress -> Show Complete flow */}
             {task.status === "in-progress" && (
               <div className="in-progress-section mt-15">
-                <div className="in-progress-notice">
-                  <p>🚀 This task is currently assigned and in progress.</p>
+                <div className="in-progress-notice" style={isOverdue(task.deadline) ? { borderLeftColor: '#ef4444', backgroundColor: '#fef2f2', color: '#991b1b' } : {}}>
+                  <p>{isOverdue(task.deadline) ? "⚠️ The deadline for this task has passed. You may want to contact the volunteer(s)." : "🚀 This task is currently assigned and in progress."}</p>
                   
                   {/* Show Progress Reports if any */}
                   {task.progressReports && task.progressReports.length > 0 && (

@@ -22,11 +22,12 @@ const taskSchema = new mongoose.Schema(
       },
     ],
 
-    selectedVolunteer: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      default: null,
-    },
+    selectedVolunteers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      }
+    ],
 
     status: {
       type: String,

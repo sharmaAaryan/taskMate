@@ -161,6 +161,7 @@ const handleSubmit = async (e) => {
             type="date"
             name="deadline"
             value={form.deadline}
+            min={new Date().toISOString().split("T")[0]}
             onChange={handleChange}
             required
           />

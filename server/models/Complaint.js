@@ -12,6 +12,10 @@ const complaintSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    task: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Task",
+    },
     subject: {
       type: String,
       required: true,

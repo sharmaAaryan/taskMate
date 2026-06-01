@@ -1077,3 +1077,373 @@ body {
 .mb-10 {
   margin-bottom: 10px;
 }
+
+/* 🌙 Dark Mode Styles */
+body.dark-mode {
+  background-color: #121212 !important;
+  color: #e0e0e0 !important;
+}
+
+body.dark-mode .navbar {
+  background-color: #1e1e1e !important;
+  border-bottom: 1px solid #333 !important;
+}
+
+body.dark-mode .navbar nav a,
+body.dark-mode .logo {
+  color: #e0e0e0 !important;
+}
+
+body.dark-mode .hero h1,
+body.dark-mode .hero p,
+body.dark-mode .how h2,
+body.dark-mode .dashboard-title {
+  color: #e0e0e0 !important;
+}
+
+body.dark-mode .card,
+body.dark-mode .task-card,
+body.dark-mode .task-card-modern,
+body.dark-mode .task-card-premium,
+body.dark-mode .profile-card,
+body.dark-mode .auth-card,
+body.dark-mode .review-box,
+body.dark-mode .stat-card,
+body.dark-mode .transaction-table-wrapper,
+body.dark-mode .modal-content,
+body.dark-mode .notification-dropdown,
+body.dark-mode .role-card,
+body.dark-mode .approval-section {
+  background-color: #1e1e1e !important;
+  color: #e0e0e0 !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid #333 !important;
+}
+
+body.dark-mode .card h3,
+body.dark-mode .card p,
+body.dark-mode .task-desc,
+body.dark-mode .desc,
+body.dark-mode .profile-details p,
+body.dark-mode .stat-card h3,
+body.dark-mode .role-card p {
+  color: #ccc !important;
+}
+
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select {
+  background-color: #2c2c2c !important;
+  color: #e0e0e0 !important;
+  border: 1px solid #444 !important;
+}
+
+body.dark-mode .transaction-table th,
+body.dark-mode .transaction-table td {
+  color: #e0e0e0 !important;
+  border-color: #333 !important;
+}
+
+body.dark-mode .transaction-table thead,
+body.dark-mode .transaction-table thead tr th {
+  background-color: #2c2c2c !important;
+}
+
+body.dark-mode .transaction-table tr {
+  border-bottom: 1px solid #333 !important;
+}
+
+body.dark-mode .transaction-table tr:hover {
+  background-color: #2a2a2a !important;
+}
+
+body.dark-mode .user-menu-trigger,
+body.dark-mode .search-input,
+body.dark-mode .filter-input,
+body.dark-mode .skill-chip,
+body.dark-mode .deadline {
+  background-color: #2c2c2c !important;
+  color: #e0e0e0 !important;
+  border-color: #444 !important;
+}
+
+body.dark-mode .user-menu-trigger span {
+  color: #e0e0e0 !important;
+}
+
+body.dark-mode .footer {
+  background: linear-gradient(to right, #0a0f1c, #111827) !important;
+}
+
+body.dark-mode .in-progress-notice {
+  background-color: #1e1e2e !important;
+  border-left-color: #8b5cf6 !important;
+}
+
+body.dark-mode .completed-section {
+  background-color: #1a2e1a !important;
+  color: #4ade80 !important;
+}
+
+body.dark-mode .notification-dropdown div[style*="background: #eef2ff"],
+body.dark-mode .notification-dropdown div[style*="background: rgb(238, 242, 255)"] {
+  background-color: #2c2c3e !important;
+}
+
+body.dark-mode .notification-dropdown div[style*="background: #f8f9fa"],
+body.dark-mode .notification-dropdown div[style*="background: rgb(248, 249, 250)"] {
+  background-color: #1e1e1e !important;
+}
+
+body.dark-mode .role-card.active {
+  background-color: #2a2a4a !important;
+  border-color: #8b5cf6 !important;
+}
+
+body.dark-mode .applicant {
+  background-color: #2a2a2a !important;
+}
+
+body.dark-mode .task-info, 
+body.dark-mode .budget {
+  color: #cbd5e1 !important;
+}
+
+body.dark-mode td div[style*="color: #1e293b"],
+body.dark-mode td div[style*="color: rgb(30, 41, 59)"],
+body.dark-mode td div[style*="color: #334155"],
+body.dark-mode td div[style*="color: rgb(51, 65, 85)"] {
+  color: #e2e8f0 !important;
+}
+
+body.dark-mode td div[style*="color: #64748b"],
+body.dark-mode td div[style*="color: rgb(100, 116, 139)"],
+body.dark-mode td div[style*="color: #94a3b8"],
+body.dark-mode td div[style*="color: rgb(148, 163, 184)"] {
+  color: #94a3b8 !important;
+}
+
+body.dark-mode .dashboard-title {
+  color: #f8fafc !important;
+}
+
+/* Overdue Update Section Styles */
+.overdue-update-section {
+  margin-bottom: 15px;
+  padding: 15px;
+  background-color: #fffbeb;
+  border-radius: 8px;
+  border: 1px solid #fde68a;
+}
+
+.overdue-warning-text {
+  color: #d97706;
+  font-weight: bold;
+  margin: 0 0 10px 0;
+}
+
+.btn-sm {
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+.update-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.update-form-row {
+  display: flex;
+  gap: 10px;
+}
+
+.update-form-group {
+  flex: 1;
+}
+
+.update-form-label {
+  display: block;
+  font-size: 12px;
+  color: #4b5563;
+  margin-bottom: 4px;
+}
+
+.update-form-input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #d1d5db;
+  outline: none;
+}
+
+.update-form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+/* Dark Mode Overrides for Overdue Section */
+body.dark-mode .overdue-update-section {
+  background-color: #422006 !important;
+  border-color: #78350f !important;
+}
+
+body.dark-mode .overdue-warning-text {
+  color: #fbbf24 !important;
+}
+
+body.dark-mode .update-form-label {
+  color: #cbd5e1 !important;
+}
+
+body.dark-mode .update-form-input {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+/* Applicant Card Premium Styles */
+.applicant-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 250px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+  transition: all 0.3s ease;
+}
+
+.applicant-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+  border-color: #cbd5e1;
+}
+
+.accepted-card {
+  border: 2px solid #10b981;
+  background: #f0fdf4;
+}
+
+.applicant-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 15px;
+}
+
+.accepted-badge {
+  color: #10b981;
+  font-size: 11px;
+  font-weight: bold;
+  background: #dcfce7;
+  padding: 4px 8px;
+  border-radius: 12px;
+}
+
+.applicant-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.applicant-actions-row {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  border: none;
+  transition: all 0.2s ease;
+  flex: 1;
+}
+
+.view-profile-btn {
+  background: #f1f5f9;
+  color: #475569;
+  text-decoration: none;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.view-profile-btn:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.accept-btn {
+  background: #10b981;
+  color: white;
+  box-shadow: 0 2px 4px rgba(16,185,129,0.2);
+}
+
+.accept-btn:hover {
+  background: #059669;
+  box-shadow: 0 4px 6px rgba(16,185,129,0.3);
+}
+
+.reject-btn {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+.reject-btn:hover {
+  background: #fecaca;
+  color: #dc2626;
+}
+
+/* Dark mode overrides for applicants */
+body.dark-mode .applicant-card {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+body.dark-mode .applicant-card:hover {
+  border-color: #475569 !important;
+}
+body.dark-mode .accepted-card {
+  border-color: #10b981 !important;
+  background: #064e3b !important;
+}
+body.dark-mode .applicant-card-header {
+  color: #f8fafc !important;
+}
+body.dark-mode .accepted-badge {
+  background: #065f46 !important;
+  color: #6ee7b7 !important;
+}
+body.dark-mode .view-profile-btn {
+  background: #334155 !important;
+  color: #cbd5e1 !important;
+}
+body.dark-mode .view-profile-btn:hover {
+  background: #475569 !important;
+  color: #f8fafc !important;
+}
+body.dark-mode .reject-btn {
+  background: #7f1d1d !important;
+  color: #fca5a5 !important;
+}
+body.dark-mode .reject-btn:hover {
+  background: #991b1b !important;
+  color: #fecaca !important;
+}

@@ -2,7 +2,10 @@ import User from "../models/User.js";
 
 export const getUserProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id).select("-password");
+    const user = await User.findById(req.params.id)
+      .select("-password")
+      .populate("ratings.byUser", "name")
+      .populate("ratings.taskId", "title");
     if (!user) return res.status(404).json({ message: "User not found" });
     res.status(200).json(user);
   } catch (error) {

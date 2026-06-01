@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 
 function Footer() {
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
+
   return (
     <footer className="footer">
       <div className="footer-container">
@@ -24,15 +27,38 @@ function Footer() {
         <div className="footer-section">
           <h4>Explore</h4>
           <Link to="/">Home</Link>
-          <Link to="/browse">Browse Tasks</Link>
-          <Link to="/post-task">Post Task</Link>
+          {token && role === "user" && (
+            <>
+              <Link to="/client-dashboard">My Dashboard</Link>
+              <Link to="/post-task">Post a Task</Link>
+            </>
+          )}
+          {token && role === "helper" && (
+            <>
+              <Link to="/volunteer-dashboard">My Dashboard</Link>
+              <Link to="/browse">Browse Tasks</Link>
+            </>
+          )}
+          {token && role === "admin" && (
+            <Link to="/admin-dashboard">Admin Dashboard</Link>
+          )}
         </div>
 
-        {/* Account */}
+        {/* Account / Support */}
         <div className="footer-section">
-          <h4>Account</h4>
-          <Link to="/login">Login</Link>
-          <Link to="/register">Register</Link>
+          <h4>{token ? "Helpful Links" : "Account"}</h4>
+          {!token ? (
+            <>
+              <Link to="/login">Login</Link>
+              <Link to="/register">Register</Link>
+            </>
+          ) : (
+            <>
+              {role !== "admin" && <Link to="/profile">My Profile</Link>}
+              {role !== "admin" && <Link to="/transactions">Transaction History</Link>}
+              <Link to="/support">Support & Complaints</Link>
+            </>
+          )}
         </div>
 
         {/* Contact */}

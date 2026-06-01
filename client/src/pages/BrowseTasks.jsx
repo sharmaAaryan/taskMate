@@ -121,9 +121,13 @@ function BrowseTasks() {
           .filter((task) =>
             maxBudget ? task.budget <= maxBudget : true
           )
-          .filter((task) =>
-            date ? new Date(task.deadline) <= new Date(date) : true
-          )
+          .filter((task) => {
+            if (!date) return true;
+            if (!task.deadline) return false;
+            const filterDate = new Date(date);
+            filterDate.setHours(23, 59, 59, 999);
+            return new Date(task.deadline) <= filterDate;
+          })
           .map((task) => (
             <div 
               key={task._id} 

@@ -81,8 +81,32 @@ const AdminDashboard = () => {
         body: JSON.stringify({ status }),
       });
       const data = await res.json();
-      alert(data.message);
+      if(!res.ok) alert(data.message);
       setRefresh((prev) => prev + 1);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleForceRefund = async (taskId, complaintId) => {
+    if (!window.confirm("Are you sure you want to FORCE REFUND this task back to the client?")) return;
+    try {
+      const res = await fetch(`http://localhost:5000/api/admin/disputes/${taskId}/refund`, { method: "POST" });
+      const data = await res.json();
+      alert(data.message);
+      if (res.ok) handleResolveComplaint(complaintId, "resolved");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleForceRelease = async (taskId, complaintId) => {
+    if (!window.confirm("Are you sure you want to FORCE RELEASE escrow to the volunteer?")) return;
+    try {
+      const res = await fetch(`http://localhost:5000/api/admin/disputes/${taskId}/release`, { method: "POST" });
+      const data = await res.json();
+      alert(data.message);
+      if (res.ok) handleResolveComplaint(complaintId, "resolved");
     } catch (error) {
       console.log(error);
     }
@@ -189,8 +213,16 @@ const AdminDashboard = () => {
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                               <span style={{ fontSize: '16px' }}>👷‍♂️</span>
                               <div>
-                                <div style={{ fontWeight: '500', color: '#1e293b' }}>{task.selectedVolunteer?.name || "Unknown"}</div>
-                                <div style={{ color: '#64748b', fontSize: '12px' }}>{task.selectedVolunteer?.email || "No email"}</div>
+                                <div style={{ fontWeight: '500', color: '#1e293b' }}>
+                                  {task.selectedVolunteers && task.selectedVolunteers.length > 0
+                                    ? task.selectedVolunteers.map(v => v.name).join(", ")
+                                    : "Unknown"}
+                                </div>
+                                <div style={{ color: '#64748b', fontSize: '12px' }}>
+                                  {task.selectedVolunteers && task.selectedVolunteers.length > 0
+                                    ? task.selectedVolunteers.map(v => v.email).join(", ")
+                                    : "No email"}
+                                </div>
                               </div>
                             </div>
                           </td>
@@ -257,12 +289,16 @@ const AdminDashboard = () => {
                             </div>
                           </td>
                           <td style={{ padding: '15px' }}>
-                            {task.selectedVolunteer ? (
+                            {task.selectedVolunteers && task.selectedVolunteers.length > 0 ? (
                               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                 <span style={{ fontSize: '16px' }}>👷‍♂️</span>
                                 <div>
-                                  <div style={{ fontWeight: '500', color: '#1e293b' }}>{task.selectedVolunteer?.name}</div>
-                                  <div style={{ color: '#64748b', fontSize: '12px' }}>{task.selectedVolunteer?.email}</div>
+                                  <div style={{ fontWeight: '500', color: '#1e293b' }}>
+                                    {task.selectedVolunteers.map(v => v.name).join(", ")}
+                                  </div>
+                                  <div style={{ color: '#64748b', fontSize: '12px' }}>
+                                    {task.selectedVolunteers.map(v => v.email).join(", ")}
+                                  </div>
                                 </div>
                               </div>
                             ) : (
@@ -528,6 +564,13 @@ const AdminDashboard = () => {
                           <span style={{ fontSize: '10px', backgroundColor: '#fee2e2', padding: '2px 6px', borderRadius: '10px', color: '#b91c1c' }}>{c.againstUser?.role || "N/A"}</span>
                         </div>
                       </div>
+                      {c.task && (
+                        <div style={{ marginTop: '10px', padding: '8px', backgroundColor: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                          <span style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: '600' }}>Related Task</span>
+                          <div style={{ fontWeight: '600', color: '#3b82f6', fontSize: '13px', marginTop: '2px' }}>{c.task.title}</div>
+                          <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>Status: {c.task.status} | Budget: ₹{c.task.budget}</div>
+                        </div>
+                      )}
                     </td>
                     <td style={{ padding: '20px', maxWidth: '300px' }}>
                       <div style={{ fontWeight: '700', color: '#334155', marginBottom: '6px', fontSize: '15px' }}>{c.subject}</div>
@@ -551,6 +594,14 @@ const AdminDashboard = () => {
                       {c.status === "open" ? (
                         <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', flexDirection: 'column' }}>
                           <button className="accept-btn" style={{ padding: '8px 16px', borderRadius: '8px', fontSize: '13px', fontWeight: '600', boxShadow: '0 4px 10px rgba(34,197,94,0.2)' }} onClick={() => handleResolveComplaint(c._id, "resolved")}>Mark Resolved</button>
+                          
+                          {c.task && c.task.status === "in-progress" && (
+                            <>
+                              <button style={{ padding: '8px 16px', borderRadius: '8px', fontSize: '13px', fontWeight: '600', backgroundColor: '#ef4444', color: 'white', border: 'none', cursor: 'pointer', boxShadow: '0 4px 10px rgba(239,68,68,0.2)' }} onClick={() => handleForceRefund(c.task._id, c._id)}>Force Refund Client</button>
+                              <button style={{ padding: '8px 16px', borderRadius: '8px', fontSize: '13px', fontWeight: '600', backgroundColor: '#3b82f6', color: 'white', border: 'none', cursor: 'pointer', boxShadow: '0 4px 10px rgba(59,130,246,0.2)' }} onClick={() => handleForceRelease(c.task._id, c._id)}>Force Release to Vol.</button>
+                            </>
+                          )}
+                          
                           <button className="reject-btn" style={{ padding: '8px 16px', borderRadius: '8px', fontSize: '13px', fontWeight: '600', boxShadow: '0 4px 10px rgba(100,116,139,0.1)' }} onClick={() => handleResolveComplaint(c._id, "dismissed")}>Dismiss</button>
                         </div>
                       ) : (
@@ -600,9 +651,9 @@ const AdminDashboard = () => {
                           <span style={{ fontSize: '10px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>(Client)</span>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <span style={{ fontSize: '14px', opacity: task.selectedVolunteer ? 1 : 0.4 }}>👷‍♂️</span>
-                          <span style={{ fontSize: '14px', color: task.selectedVolunteer ? '#475569' : '#94a3b8', fontWeight: '600', fontStyle: task.selectedVolunteer ? 'normal' : 'italic' }}>
-                            {task.selectedVolunteer ? task.selectedVolunteer.name : "Unassigned"}
+                          <span style={{ fontSize: '14px', opacity: task.selectedVolunteers && task.selectedVolunteers.length > 0 ? 1 : 0.4 }}>👷‍♂️</span>
+                          <span style={{ fontSize: '14px', color: task.selectedVolunteers && task.selectedVolunteers.length > 0 ? '#475569' : '#94a3b8', fontWeight: '600', fontStyle: task.selectedVolunteers && task.selectedVolunteers.length > 0 ? 'normal' : 'italic' }}>
+                            {task.selectedVolunteers && task.selectedVolunteers.length > 0 ? task.selectedVolunteers.map(v => v.name).join(", ") : "Unassigned"}
                           </span>
                           <span style={{ fontSize: '10px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>(Volunteer)</span>
                         </div>

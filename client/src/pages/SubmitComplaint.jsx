@@ -5,6 +5,7 @@ const SubmitComplaint = () => {
   const [againstUserEmail, setAgainstUserEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
+  const [taskId, setTaskId] = useState("");
   const [loading, setLoading] = useState(false);
   const userId = localStorage.getItem("userId");
 
@@ -17,7 +18,7 @@ const SubmitComplaint = () => {
       const res = await fetch("http://localhost:5000/api/complaints", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, againstUserEmail, subject, description }),
+        body: JSON.stringify({ userId, againstUserEmail, subject, description, taskId: taskId || undefined }),
       });
       const data = await res.json();
       
@@ -31,6 +32,7 @@ const SubmitComplaint = () => {
       setAgainstUserEmail("");
       setSubject("");
       setDescription("");
+      setTaskId("");
     } catch (error) {
       console.log(error);
       alert("Failed to submit complaint.");
@@ -58,6 +60,12 @@ const SubmitComplaint = () => {
             value={againstUserEmail}
             onChange={(e) => setAgainstUserEmail(e.target.value)}
             required
+          />
+          <input
+            type="text"
+            placeholder="Task ID (Optional, if related to a specific task)"
+            value={taskId}
+            onChange={(e) => setTaskId(e.target.value)}
           />
           <input
             type="text"

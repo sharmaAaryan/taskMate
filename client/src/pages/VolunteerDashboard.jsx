@@ -43,6 +43,13 @@ function VolunteerDashboard() {
     }
   };
 
+  const isOverdue = (deadline) => {
+    if (!deadline) return false;
+    const dl = new Date(deadline);
+    dl.setHours(23, 59, 59, 999);
+    return new Date() > dl;
+  };
+
   useEffect(() => {
     const fetchMyApplications = async () => {
       try {
@@ -71,9 +78,16 @@ function VolunteerDashboard() {
             <div key={_id} className="task-card-modern">
               <div className="task-header">
                 <h3>{task.title}</h3>
-                <span className={`status-badge ${status.toLowerCase()}`}>
-                  {status}
-                </span>
+                <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                  {status.toLowerCase() === "accepted" && isOverdue(task.deadline) && (
+                    <span style={{ backgroundColor: "#fee2e2", color: "#b91c1c", padding: "5px 12px", borderRadius: "20px", fontSize: "12px", fontWeight: "600" }}>
+                      ⚠️ OVERDUE
+                    </span>
+                  )}
+                  <span className={`status-badge ${status.toLowerCase()}`}>
+                    {status}
+                  </span>
+                </div>
               </div>
 
               <div className="task-desc-container">
@@ -118,21 +132,28 @@ function VolunteerDashboard() {
               </div>
 
               {status.toLowerCase() === "accepted" && (
-                <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-                  <button
-                    className="secondary"
-                    onClick={() => navigate(`/chat/${task._id}`)}
-                    style={{ flex: 1, padding: "10px" }}
-                  >
-                    Chat 💬
-                  </button>
-                  <button
-                    className="primary"
-                    onClick={() => setProgressTask(task._id)}
-                    style={{ flex: 1, padding: "10px" }}
-                  >
-                    Submit Progress 📈
-                  </button>
+                <div style={{ display: 'flex', gap: '10px', marginTop: '10px', flexDirection: 'column' }}>
+                  {isOverdue(task.deadline) && (
+                     <div style={{ fontSize: '13px', color: '#b91c1c', background: '#fef2f2', padding: '10px', borderRadius: '8px', border: '1px solid #fca5a5' }}>
+                        ⚠️ This task is past its deadline. Please contact the client or submit progress immediately to avoid dispute.
+                     </div>
+                  )}
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <button
+                      className="secondary"
+                      onClick={() => navigate(`/chat/${task._id}`)}
+                      style={{ flex: 1, padding: "10px" }}
+                    >
+                      Chat 💬
+                    </button>
+                    <button
+                      className="primary"
+                      onClick={() => setProgressTask(task._id)}
+                      style={{ flex: 1, padding: "10px" }}
+                    >
+                      Submit Progress 📈
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
