@@ -9,7 +9,7 @@ function ViewProfile() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/users/${id}`);
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/users/${id}`);
         const data = await res.json();
         setProfile(data);
       } catch (error) {

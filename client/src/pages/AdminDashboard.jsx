@@ -17,8 +17,8 @@ const AdminDashboard = () => {
       if (role !== "admin") return;
       try {
         const [statsRes, complaintsRes] = await Promise.all([
-          fetch("http://localhost:5000/api/admin/stats"),
-          fetch("http://localhost:5000/api/complaints")
+          fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/admin/stats`),
+          fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/complaints`)
         ]);
         
         const statsData = await statsRes.json();
@@ -38,7 +38,7 @@ const AdminDashboard = () => {
 
   const handleApprove = async (userId) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/users/${userId}/approve`, { method: "PUT" });
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/admin/users/${userId}/approve`, { method: "PUT" });
       const data = await res.json();
       alert(data.message);
       setRefresh((prev) => prev + 1);
@@ -50,7 +50,7 @@ const AdminDashboard = () => {
   const handleReject = async (userId) => {
     if (!window.confirm("Are you sure you want to reject and delete this user?")) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/users/${userId}/reject`, { method: "DELETE" });
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/admin/users/${userId}/reject`, { method: "DELETE" });
       const data = await res.json();
       alert(data.message);
       setRefresh((prev) => prev + 1);
@@ -60,7 +60,7 @@ const AdminDashboard = () => {
   };
   const handleUnblock = async (userId) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/users/${userId}/unblock`, { method: "PUT" });
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/admin/users/${userId}/unblock`, { method: "PUT" });
       const data = await res.json();
       if(res.ok) {
         alert("User unblocked successfully!");
@@ -75,7 +75,7 @@ const AdminDashboard = () => {
 
   const handleResolveComplaint = async (complaintId, status) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/complaints/${complaintId}/status`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/complaints/${complaintId}/status`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status }),
@@ -91,7 +91,7 @@ const AdminDashboard = () => {
   const handleForceRefund = async (taskId, complaintId) => {
     if (!window.confirm("Are you sure you want to FORCE REFUND this task back to the client?")) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/disputes/${taskId}/refund`, { method: "POST" });
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/admin/disputes/${taskId}/refund`, { method: "POST" });
       const data = await res.json();
       alert(data.message);
       if (res.ok) handleResolveComplaint(complaintId, "resolved");
@@ -103,7 +103,7 @@ const AdminDashboard = () => {
   const handleForceRelease = async (taskId, complaintId) => {
     if (!window.confirm("Are you sure you want to FORCE RELEASE escrow to the volunteer?")) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/disputes/${taskId}/release`, { method: "POST" });
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/admin/disputes/${taskId}/release`, { method: "POST" });
       const data = await res.json();
       alert(data.message);
       if (res.ok) handleResolveComplaint(complaintId, "resolved");

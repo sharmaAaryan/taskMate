@@ -10,7 +10,7 @@ const TransactionHistory = () => {
     const fetchTransactions = async () => {
       if (!userId) return;
       try {
-        const res = await fetch(`http://localhost:5000/api/transactions/${userId}`);
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/transactions/${userId}`);
         const data = await res.json();
         setTransactions(data);
       } catch (error) {

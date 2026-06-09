@@ -31,8 +31,8 @@ function Navbar() {
     const fetchNotificationsAndWallet = async () => {
       try {
         const [notifRes, userRes] = await Promise.all([
-          fetch(`http://localhost:5000/api/notifications/${userId}`),
-          fetch(`http://localhost:5000/api/users/${userId}`)
+          fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/notifications/${userId}`),
+          fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/users/${userId}`)
         ]);
         
         const notifData = await notifRes.json();
@@ -59,7 +59,7 @@ function Navbar() {
 
   const markAsRead = async (id) => {
     try {
-      await fetch(`http://localhost:5000/api/notifications/${id}/read`, {
+      await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/notifications/${id}/read`, {
         method: "PUT",
       });
       setNotifications((prev) =>
@@ -152,7 +152,7 @@ function Navbar() {
                             onClick={() => {
                               const amount = prompt("Enter amount to add to wallet (INR):");
                               if (amount && !isNaN(amount) && Number(amount) > 0) {
-                                fetch(`http://localhost:5000/api/users/${userId}/add-funds`, {
+                                fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/users/${userId}/add-funds`, {
                                   method: "POST",
                                   headers: { "Content-Type": "application/json" },
                                   body: JSON.stringify({ amount: Number(amount) })

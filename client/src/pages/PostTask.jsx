@@ -25,7 +25,7 @@ function PostTask() {
 
     setIsEnhancing(true);
     try {
-      const res = await fetch("http://localhost:5000/api/ai/enhance-description", {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/ai/enhance-description`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -54,7 +54,7 @@ const handleSubmit = async (e) => {
   const userId = localStorage.getItem("userId");
 
   try {
-    const res = await fetch("http://localhost:5000/api/tasks/create", {
+    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/tasks/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

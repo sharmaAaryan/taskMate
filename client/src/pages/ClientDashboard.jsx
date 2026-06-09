@@ -27,7 +27,7 @@ function ClientDashboard() {
   useEffect(() => {
     const fetchMyTasks = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/tasks");
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/tasks`);
         const data = await res.json();
 
         const myTasks = data.filter(
@@ -45,7 +45,7 @@ function ClientDashboard() {
   /* ✅ Accept Applicant */
   const handleAccept = async (taskId, applicantId) => {
     try {
-      const res = await fetch("http://localhost:5000/api/tasks/accept", {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/tasks/accept`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ taskId, userId: applicantId }),
@@ -61,7 +61,7 @@ function ClientDashboard() {
   /* ❌ Reject Applicant */
   const handleReject = async (taskId, applicantId) => {
     try {
-      const res = await fetch("http://localhost:5000/api/tasks/reject", {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/tasks/reject`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ taskId, userId: applicantId }),
@@ -77,7 +77,7 @@ function ClientDashboard() {
   /* 🏆 Submit Completion & Review */
   const handleComplete = async (taskId) => {
     try {
-      const res = await fetch("http://localhost:5000/api/tasks/complete", {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/tasks/complete`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -104,7 +104,7 @@ function ClientDashboard() {
   const handleDelete = async (taskId) => {
     if (!window.confirm("Are you sure you want to delete this task?")) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/tasks/${taskId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/tasks/${taskId}`, {
         method: "DELETE",
       });
       const data = await res.json();
@@ -118,7 +118,7 @@ function ClientDashboard() {
   /* 🔄 Update Expired Task */
   const handleUpdateTask = async (taskId) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/tasks/update-expired/${taskId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/tasks/update-expired/${taskId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ budget: newBudget, deadline: newDeadline }),

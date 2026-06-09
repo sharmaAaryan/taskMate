@@ -14,7 +14,7 @@ function BrowseTasks() {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/tasks");
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/tasks`);
         const data = await res.json();
         setTasks(data);
       } catch (error) {
@@ -25,7 +25,7 @@ function BrowseTasks() {
     const fetchMyApplications = async () => {
       if (!userId) return;
       try {
-        const res = await fetch(`http://localhost:5000/api/apply/user/${userId}`);
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/apply/user/${userId}`);
         if (res.ok) {
           const data = await res.json();
           const active = data.some(app => ["pending", "accepted", "in-progress"].includes(app.status.toLowerCase()));
@@ -42,7 +42,7 @@ function BrowseTasks() {
 
   const applyTask = async (taskId) => {
 
-    const res = await fetch("http://localhost:5000/api/apply", {
+    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/apply`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

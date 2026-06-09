@@ -20,7 +20,7 @@ const TaskChat = () => {
     }
 
     // Connect to socket
-    socketRef.current = io("http://localhost:5000");
+    socketRef.current = io(import.meta.env.VITE_API_BASE_URL || "http://localhost:5000");
 
     // Join room
     socketRef.current.emit("join_task", taskId);
@@ -29,8 +29,8 @@ const TaskChat = () => {
     const fetchData = async () => {
       try {
         const [msgRes, taskRes] = await Promise.all([
-          fetch(`http://localhost:5000/api/messages/${taskId}`),
-          fetch(`http://localhost:5000/api/tasks/${taskId}`)
+          fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/messages/${taskId}`),
+          fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/tasks/${taskId}`)
         ]);
         const msgData = await msgRes.json();
         const taskData = await taskRes.json();

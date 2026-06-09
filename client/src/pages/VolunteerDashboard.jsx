@@ -18,7 +18,7 @@ function VolunteerDashboard() {
     
     setIsSubmitting(true);
     try {
-      const res = await fetch("http://localhost:5000/api/tasks/progress", {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/tasks/progress`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -53,7 +53,7 @@ function VolunteerDashboard() {
   useEffect(() => {
     const fetchMyApplications = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/apply/user/${userId}`);
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"}/api/apply/user/${userId}`);
         if (res.ok) {
           const data = await res.json();
           setApplications(data);
