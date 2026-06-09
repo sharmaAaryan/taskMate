@@ -4,6 +4,8 @@ import Home from "./pages/Home";
 import BrowseTasks from "./pages/BrowseTasks";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import Footer from "./components/Footer";
 import PostTask from "./pages/PostTask";
 import ClientDashboard from "./pages/ClientDashboard";
@@ -25,6 +27,8 @@ function App() {
         <Route path="/browse" element={<BrowseTasks />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/post-task" element={<PostTask />} />
         <Route path="/client-dashboard" element={<ClientDashboard />} />
         <Route path="/volunteer-dashboard" element={<VolunteerDashboard />} />

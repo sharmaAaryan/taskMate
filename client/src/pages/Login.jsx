@@ -82,6 +82,12 @@ function Login() {
             required
           />
 
+          <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "15px", marginTop: "-5px" }}>
+            <Link to="/forgot-password" style={{ fontSize: "13px", color: "#007bff", textDecoration: "none", fontWeight: "500" }}>
+              Forgot Password?
+            </Link>
+          </div>
+
           <button type="submit" className="primary full-btn">
             Login
           </button>

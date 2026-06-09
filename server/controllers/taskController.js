@@ -2,6 +2,7 @@ import Task from "../models/Task.js";
 import User from "../models/User.js";
 import Transaction from "../models/Transaction.js";
 import Notification from "../models/Notification.js";
+import { sendEmail } from "../utils/emailService.js";
 
 export const createTask = async (req, res) => {
   try {
@@ -14,6 +15,22 @@ export const createTask = async (req, res) => {
       deadline,
       createdBy: userId,
     });
+
+    // Send email to task creator
+    const creator = await User.findById(userId);
+    if (creator && creator.email) {
+      await sendEmail({
+        to: creator.email,
+        subject: `Taskmate - Task Posted Successfully: "${title}"`,
+        text: `Hello ${creator.name},\n\n` +
+          `Your task "${title}" has been successfully posted on Taskmate!\n\n` +
+          `Details:\n` +
+          `- Budget: ₹${budget}\n` +
+          `- Deadline: ${new Date(deadline).toLocaleDateString()}\n\n` +
+          `You will receive email notifications as volunteers apply to your task.\n\n` +
+          `Thank you,\nTaskmate Team`,
+      });
+    }
 
     res.status(201).json({ message: "Task Posted ✅", task });
   } catch (error) {
@@ -83,6 +100,20 @@ export const acceptApplicant = async (req, res) => {
       message: `🎉 Application Accepted! You have been selected to work on "${task.title}". Escrow funded by client.`,
     });
 
+    // Notify the volunteer via email
+    const volunteer = await User.findById(userId);
+    if (volunteer && volunteer.email) {
+      await sendEmail({
+        to: volunteer.email,
+        subject: `Taskmate - Application Accepted for "${task.title}"`,
+        text: `Hello ${volunteer.name},\n\n` +
+          `Congratulations! The client has accepted your application to work on the task: "${task.title}".\n\n` +
+          `The task budget of ₹${task.budget} has been held in escrow and will be released to your wallet once the task is completed.\n\n` +
+          `Please log in to Taskmate to start working and communicate with the client.\n\n` +
+          `Good luck,\nTaskmate Team`,
+      });
+    }
+
     res.json({ message: `Applicant Accepted! ₹${task.budget} held in Escrow ✅` });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -111,6 +142,19 @@ export const rejectApplicant = async (req, res) => {
       userId: userId,
       message: `Your application for "${task.title}" was not selected by the client. Keep applying for other tasks!`,
     });
+
+    // Notify the volunteer via email
+    const volunteer = await User.findById(userId);
+    if (volunteer && volunteer.email) {
+      await sendEmail({
+        to: volunteer.email,
+        subject: `Taskmate - Application Update: "${task.title}"`,
+        text: `Hello ${volunteer.name},\n\n` +
+          `Thank you for applying to the task "${task.title}".\n\n` +
+          `The client has decided to proceed with another applicant for this specific task. Please don't be discouraged, and keep applying for other open tasks on the platform!\n\n` +
+          `Best regards,\nTaskmate Team`,
+      });
+    }
 
     res.json({ message: "Applicant Rejected ❌" });
   } catch (error) {
@@ -166,7 +210,32 @@ export const completeTask = async (req, res) => {
           userId: volId,
           message: `💰 Task Completed! You earned ₹${task.budget} for "${task.title}". The amount has been transferred to your wallet.`,
         });
+
+        // Notify the volunteer via email
+        if (volunteer.email) {
+          await sendEmail({
+            to: volunteer.email,
+            subject: `Taskmate - Task Completed & Payment Released: "${task.title}"`,
+            text: `Hello ${volunteer.name},\n\n` +
+              `Great job! The client has marked the task "${task.title}" as completed.\n\n` +
+              `Your payment of ₹${task.budget} has been released from escrow and credited to your wallet.\n\n` +
+              `Thank you for your hard work!\nTaskmate Team`,
+          });
+        }
       }
+    }
+
+    // Notify the client via email
+    const client = await User.findById(task.createdBy);
+    if (client && client.email) {
+      await sendEmail({
+        to: client.email,
+        subject: `Taskmate - Task Marked as Completed: "${task.title}"`,
+        text: `Hello ${client.name},\n\n` +
+          `Your task "${task.title}" has been marked as completed.\n\n` +
+          `The escrow budget of ₹${task.budget * task.selectedVolunteers.length} has been successfully released and credited to the assigned volunteer(s).\n\n` +
+          `Thank you for using Taskmate to get things done!\nTaskmate Team`,
+      });
     }
 
     res.json({ message: `Task completed! ₹${task.budget * task.selectedVolunteers.length} released to volunteers 🎉` });
@@ -232,6 +301,21 @@ export const submitProgress = async (req, res) => {
     });
 
     await task.save();
+
+    // Notify the task creator/client via email
+    const client = await User.findById(task.createdBy);
+    if (client && client.email) {
+      await sendEmail({
+        to: client.email,
+        subject: `Taskmate - Progress Report Submitted for "${task.title}"`,
+        text: `Hello ${client.name},\n\n` +
+          `The volunteer assigned to your task "${task.title}" has submitted a new progress report.\n\n` +
+          `Description of progress:\n` +
+          `"${description}"\n\n` +
+          `Please log in to your dashboard to view full details and any submitted documents.\n\n` +
+          `Best regards,\nTaskmate Team`,
+      });
+    }
 
     res.json({ message: "Progress Report Submitted! 🚀", task });
   } catch (error) {

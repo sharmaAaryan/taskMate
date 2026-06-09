@@ -2,6 +2,7 @@ import Application from "../models/Application.js";
 import Task from "../models/Task.js";
 import User from "../models/User.js";
 import Notification from "../models/Notification.js";
+import { sendEmail } from "../utils/emailService.js";
 
 /* Apply to Task */
 export const applyTask = async (req, res) => {
@@ -61,6 +62,19 @@ export const applyTask = async (req, res) => {
         userId: task.createdBy,
         message: `${user.name} applied to your task "${task.title}"`,
       });
+
+      // Notify the Client/Creator via email
+      const client = await User.findById(task.createdBy);
+      if (client && client.email) {
+        await sendEmail({
+          to: client.email,
+          subject: `Taskmate - New Application on "${task.title}"`,
+          text: `Hello ${client.name},\n\n` +
+            `A volunteer, ${user.name}, has just applied to work on your task "${task.title}".\n\n` +
+            `Please log in to your Taskmate dashboard to review their application and take action.\n\n` +
+            `Best regards,\nTaskmate Team`,
+        });
+      }
     }
 
     res.status(201).json({

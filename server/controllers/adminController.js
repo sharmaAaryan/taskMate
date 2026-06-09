@@ -1,5 +1,6 @@
 import Task from "../models/Task.js";
 import User from "../models/User.js";
+import { sendEmail } from "../utils/emailService.js";
 
 export const getAdminStats = async (req, res) => {
   try {
@@ -96,6 +97,22 @@ export const refundClientEscrow = async (req, res) => {
       taskId: task._id,
     });
 
+    // Notify the unassigned volunteers before clearing them
+    for (let volId of task.selectedVolunteers) {
+      const volunteer = await User.findById(volId);
+      if (volunteer && volunteer.email) {
+        await sendEmail({
+          to: volunteer.email,
+          subject: `Taskmate Admin Update - Task Assignment Canceled: "${task.title}"`,
+          text: `Hello ${volunteer.name},\n\n` +
+            `Please be notified that the Taskmate Admin has canceled the escrow/assignment for the task: "${task.title}".\n\n` +
+            `You have been unassigned from this task. Any escrow funds have been refunded to the client.\n\n` +
+            `If you have questions, please reach out to Taskmate Support.\n\n` +
+            `Best regards,\nTaskmate Team`,
+        });
+      }
+    }
+
     // Mark task as open again (or cancelled, but let's do open so they can hire someone else, or 'cancelled' if we want)
     task.status = "open";
     task.selectedVolunteers = []; // Unassign the volunteers
@@ -145,6 +162,20 @@ export const releaseEscrowToVolunteer = async (req, res) => {
     // Mark task as completed
     task.status = "completed";
     await task.save();
+
+    // Notify the client/creator
+    const client = await User.findById(task.createdBy);
+    if (client && client.email) {
+      await sendEmail({
+        to: client.email,
+        subject: `Taskmate Admin Update - Escrow Released: "${task.title}"`,
+        text: `Hello ${client.name},\n\n` +
+          `Please be notified that the Taskmate Admin has forcefully released the escrow funds for your task "${task.title}" to the assigned volunteer(s).\n\n` +
+          `The task has been marked as completed.\n\n` +
+          `If you have questions, please contact Taskmate Support.\n\n` +
+          `Best regards,\nTaskmate Team`,
+      });
+    }
 
     res.json({ message: "Escrow successfully released to volunteer. Task completed. ✅" });
   } catch (error) {
