@@ -284,7 +284,7 @@ function ClientDashboard() {
                 {task.applicants && task.applicants.length > 0 ? (
                   <div className="applicant-list">
                     {task.applicants.map((app, index) => {
-                      const isAccepted = task.selectedVolunteers?.includes(app.user);
+                      const isAccepted = task.selectedVolunteers?.some(v => (v._id || v) === app.user);
                       return (
                       <div key={index} className={`applicant-card ${isAccepted ? 'accepted-card' : ''}`}>
                         <div className="applicant-card-header">

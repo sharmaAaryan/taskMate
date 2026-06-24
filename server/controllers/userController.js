@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import Transaction from "../models/Transaction.js";
 
 export const getUserProfile = async (req, res) => {
   try {
@@ -46,6 +47,14 @@ export const addFunds = async (req, res) => {
 
     user.walletBalance += Number(amount);
     await user.save();
+
+    // Create a transaction record for adding funds
+    await Transaction.create({
+      user: user._id,
+      type: "credit",
+      amount: Number(amount),
+      description: "Added funds to wallet",
+    });
 
     res.status(200).json({ message: "Funds added successfully", walletBalance: user.walletBalance });
   } catch (error) {

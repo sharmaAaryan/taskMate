@@ -10,7 +10,6 @@ function Navbar() {
   const userId = localStorage.getItem("userId");
 
   const [notifications, setNotifications] = useState([]);
-  const [showDropdown, setShowDropdown] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [walletBalance, setWalletBalance] = useState(null);
   const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === "true");
@@ -41,7 +40,7 @@ function Navbar() {
         setNotifications(notifData);
         setWalletBalance(userData.walletBalance);
       } catch (error) {
-        console.error("Failed to fetch data");
+        console.error("Failed to fetch data", error);
       }
     };
 

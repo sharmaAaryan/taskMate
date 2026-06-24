@@ -62,7 +62,7 @@ export const acceptApplicant = async (req, res) => {
       return res.status(404).json({ message: "Task not found" });
     }
 
-    if (task.selectedVolunteers.includes(userId)) {
+    if (task.selectedVolunteers.some(v => v.toString() === userId.toString())) {
       return res.status(400).json({ message: "Volunteer already accepted for this task." });
     }
 

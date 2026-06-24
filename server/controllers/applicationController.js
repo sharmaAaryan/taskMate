@@ -37,9 +37,9 @@ export const applyTask = async (req, res) => {
       const existingTask = await Task.findById(app.taskId);
       if (existingTask && existingTask.status !== "completed") {
         let isRejected = false;
-        if (existingTask.selectedVolunteers && !existingTask.selectedVolunteers.includes(userId)) {
+        if (existingTask.selectedVolunteers && !existingTask.selectedVolunteers.some(v => v.toString() === userId.toString())) {
           isRejected = true;
-        } else if (!existingTask.selectedVolunteers?.length && !existingTask.applicants.some(a => a.user.toString() === userId)) {
+        } else if (!existingTask.selectedVolunteers?.length && !existingTask.applicants.some(a => a.user.toString() === userId.toString())) {
           isRejected = true;
         }
         
@@ -116,11 +116,11 @@ export const getUserApplications = async (req, res) => {
 
       let status = "Pending";
 
-      if (task.selectedVolunteers?.includes(userId)) {
+      if (task.selectedVolunteers?.some(v => v.toString() === userId.toString())) {
         status = "Accepted";
       } else {
         const stillApplicant = task.applicants.some(
-          (a) => a.user.toString() === userId
+          (a) => a.user.toString() === userId.toString()
         );
         if (!stillApplicant) {
           status = "Rejected";
