@@ -135,8 +135,9 @@ export const forgotPassword = async (req, res) => {
     await user.save();
 
     // Construct reset link
-    const frontendUrl = process.env.CLIENT_URL || "http://localhost:5173";
+    const frontendUrl = process.env.CLIENT_URL || "https://task-mate-orpin-tau.vercel.app";
     const resetUrl = `${frontendUrl}/reset-password/${resetToken}`;
+
 
     // Send email using centralized email service
     const subject = "Taskmate - Password Reset Request";

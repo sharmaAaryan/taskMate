@@ -21,10 +21,21 @@ dotenv.config();
 const app = express();
 const server = http.createServer(app);
 
-const FRONTEND_URL = process.env.CLIENT_URL || process.env.CORS_ORIGIN || "http://localhost:5173";
-const allowedOrigins = process.env.CORS_ORIGIN
-  ? process.env.CORS_ORIGIN.split(",").map((origin) => origin.trim())
-  : [FRONTEND_URL];
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://task-mate-orpin-tau.vercel.app"
+];
+if (process.env.CLIENT_URL && !allowedOrigins.includes(process.env.CLIENT_URL)) {
+  allowedOrigins.push(process.env.CLIENT_URL);
+}
+if (process.env.CORS_ORIGIN) {
+  process.env.CORS_ORIGIN.split(",").map((origin) => origin.trim()).forEach(origin => {
+    if (origin && !allowedOrigins.includes(origin)) {
+      allowedOrigins.push(origin);
+    }
+  });
+}
+
 
 const io = new Server(server, {
   cors: {
