@@ -13,6 +13,7 @@ function Navbar() {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [walletBalance, setWalletBalance] = useState(null);
   const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === "true");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (darkMode) {
@@ -51,6 +52,7 @@ function Navbar() {
   }, [token, userId]);
 
   const handleLogout = () => {
+    setMobileMenuOpen(false);
     localStorage.clear();
     navigate("/");
     window.location.reload();
@@ -73,39 +75,48 @@ function Navbar() {
 
   return (
     <header className="navbar">
-      <div className="logo">TaskMate</div>
+      <div className="logo" onClick={() => navigate("/")} style={{ cursor: "pointer" }}>TaskMate</div>
 
-      <nav>
-        <Link to="/">Home</Link>
+      {/* ☰ Hamburger Menu Button */}
+      <button 
+        className="menu-toggle" 
+        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        aria-label="Toggle Navigation"
+      >
+        ☰
+      </button>
+
+      <nav className={mobileMenuOpen ? "active" : ""}>
+        <Link to="/" onClick={() => setMobileMenuOpen(false)}>Home</Link>
 
         {/* 👤 CLIENT */}
         {token && role === "user" && (
           <>
-            <Link to="/client-dashboard">Dashboard</Link>
-            <Link to="/post-task">Post Task</Link>
+            <Link to="/client-dashboard" onClick={() => setMobileMenuOpen(false)}>Dashboard</Link>
+            <Link to="/post-task" onClick={() => setMobileMenuOpen(false)}>Post Task</Link>
           </>
         )}
 
         {/* 🤝 VOLUNTEER */}
         {token && role === "helper" && (
           <>
-            <Link to="/volunteer-dashboard">Dashboard</Link>
-            <Link to="/browse">Browse Tasks</Link>
+            <Link to="/volunteer-dashboard" onClick={() => setMobileMenuOpen(false)}>Dashboard</Link>
+            <Link to="/browse" onClick={() => setMobileMenuOpen(false)}>Browse Tasks</Link>
           </>
         )}
 
         {/* 👑 ADMIN */}
         {token && role === "admin" && (
           <>
-            <Link to="/admin-dashboard">Admin Dashboard</Link>
+            <Link to="/admin-dashboard" onClick={() => setMobileMenuOpen(false)}>Admin Dashboard</Link>
           </>
         )}
 
         {/* NOT LOGGED IN */}
         {!token && (
           <>
-            <Link to="/login">Login</Link>
-            <Link to="/register">
+            <Link to="/login" onClick={() => setMobileMenuOpen(false)}>Login</Link>
+            <Link to="/register" onClick={() => setMobileMenuOpen(false)}>
               <button className="register-btn">Register</button>
             </Link>
           </>
@@ -132,7 +143,7 @@ function Navbar() {
               {showUserMenu && (
                 <div className="notification-dropdown" style={{ right: 0, minWidth: "200px", padding: "10px", zIndex: 1000, position: "absolute", background: "white", borderRadius: "8px", boxShadow: "0 4px 15px rgba(0,0,0,0.1)", top: "100%", marginTop: "10px" }}>
                   <div 
-                    onClick={() => { setDarkMode(!darkMode); setShowUserMenu(false); }} 
+                    onClick={() => { setDarkMode(!darkMode); setShowUserMenu(false); setMobileMenuOpen(false); }} 
                     style={{ display: "block", padding: "10px", color: "#334155", textDecoration: "none", cursor: "pointer", transition: "0.2s", borderBottom: role !== "admin" ? "1px solid #eee" : "none", marginBottom: "5px" }}
                   >
                     {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
@@ -177,9 +188,9 @@ function Navbar() {
                   
                   {role !== "admin" && (
                     <>
-                      <Link to="/profile" style={{ display: "block", padding: "10px", color: "#334155", textDecoration: "none", transition: "0.2s" }} onClick={() => setShowUserMenu(false)}>👤 Profile</Link>
-                      <Link to="/transactions" style={{ display: "block", padding: "10px", color: "#334155", textDecoration: "none", transition: "0.2s" }} onClick={() => setShowUserMenu(false)}>📜 Transactions</Link>
-                      <Link to="/support" style={{ display: "block", padding: "10px", color: "#334155", textDecoration: "none", transition: "0.2s" }} onClick={() => setShowUserMenu(false)}>🎧 Support / Complaints</Link>
+                      <Link to="/profile" style={{ display: "block", padding: "10px", color: "#334155", textDecoration: "none", transition: "0.2s" }} onClick={() => { setShowUserMenu(false); setMobileMenuOpen(false); }}>👤 Profile</Link>
+                      <Link to="/transactions" style={{ display: "block", padding: "10px", color: "#334155", textDecoration: "none", transition: "0.2s" }} onClick={() => { setShowUserMenu(false); setMobileMenuOpen(false); }}>📜 Transactions</Link>
+                      <Link to="/support" style={{ display: "block", padding: "10px", color: "#334155", textDecoration: "none", transition: "0.2s" }} onClick={() => { setShowUserMenu(false); setMobileMenuOpen(false); }}>🎧 Support / Complaints</Link>
                     </>
                   )}
 
@@ -194,7 +205,7 @@ function Navbar() {
                             {notifications.map((n) => (
                               <div 
                                 key={n._id} 
-                                onClick={() => markAsRead(n._id)}
+                                onClick={() => { markAsRead(n._id); setMobileMenuOpen(false); }}
                                 style={{ padding: "8px", background: n.isRead ? "#f8f9fa" : "#eef2ff", borderRadius: "6px", cursor: "pointer", fontSize: "13px" }}
                               >
                                 <p style={{ margin: 0, color: n.isRead ? "#555" : "#111", fontWeight: n.isRead ? "normal" : "600" }}>{n.message}</p>

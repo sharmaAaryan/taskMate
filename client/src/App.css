@@ -1446,4 +1446,305 @@ body.dark-mode .reject-btn {
 body.dark-mode .reject-btn:hover {
   background: #991b1b !important;
   color: #fecaca !important;
+}
+
+/* ==========================================================================
+   📱 MOBILE & RESPONSIVE STYLES
+   ========================================================================== */
+
+/* Hide mobile menu toggle button by default on desktop */
+.menu-toggle {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  /* Navbar collapse */
+  .navbar {
+    padding: 12px 20px;
+    position: relative;
+    flex-wrap: wrap; /* allow wrapping on header */
+  }
+
+  .menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 26px;
+    cursor: pointer;
+    color: #5a5af7;
+    padding: 0;
+    line-height: 1;
+    order: 2; /* ensure toggle button stays on the right */
+  }
+
+  body.dark-mode .menu-toggle {
+    color: #cbd5e1;
+  }
+
+  .logo {
+    order: 1; /* keep logo on the left */
+  }
+
+  .navbar nav {
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+    z-index: 1000;
+    order: 3; /* display under the header */
+  }
+
+  body.dark-mode .navbar nav {
+    background-color: #1e1e1e !important;
+    border-top: 1px solid #333 !important;
+    border-bottom: 1px solid #333 !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+  }
+
+  .navbar nav.active {
+    display: flex;
+  }
+
+  .navbar nav a {
+    margin: 8px 20px;
+    display: block;
+    font-size: 15px;
+    text-align: left;
+    padding: 8px 0;
+    border-bottom: 1px dashed rgba(0, 0, 0, 0.05);
+  }
+
+  body.dark-mode .navbar nav a {
+    border-bottom-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .navbar nav a:last-of-type {
+    border-bottom: none;
+  }
+
+  .nav-right {
+    flex-direction: column;
+    align-items: stretch;
+    margin: 8px 20px;
+    gap: 12px;
+  }
+
+  .register-btn {
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+    padding: 10px;
+  }
+
+  .navbar nav a .register-btn {
+    margin: 0;
+  }
+
+  .notification-wrapper {
+    width: 100%;
+  }
+
+  .user-menu-trigger {
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: space-between !important;
+  }
+
+  .notification-dropdown {
+    position: static;
+    width: 100%;
+    min-width: unset;
+    box-shadow: none !important;
+    border: 1px solid #eee;
+    margin-top: 10px;
+    box-sizing: border-box;
+  }
+
+  body.dark-mode .notification-dropdown {
+    border: 1px solid #333 !important;
+  }
+
+  /* Hero Section */
+  .hero {
+    padding: 40px 15px;
+  }
+
+  .hero h1 {
+    font-size: 28px;
+  }
+
+  .hero p {
+    font-size: 14px;
+    padding: 0;
+  }
+
+  .buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  .primary, .secondary {
+    width: 100%;
+    max-width: 280px;
+    margin-right: 0;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  /* How Section & Cards */
+  .how {
+    padding: 30px 15px;
+  }
+
+  .cards {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 320px;
+    box-sizing: border-box;
+  }
+
+  /* Auth Pages */
+  .auth-container {
+    height: auto;
+    padding: 30px 15px;
+  }
+
+  .auth-card {
+    width: 100%;
+    max-width: 350px;
+    padding: 25px 20px;
+    box-sizing: border-box;
+  }
+
+  /* Role Selection Cards */
+  .role-cards {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* Dashboards */
+  .dashboard {
+    padding: 20px 15px;
+  }
+
+  .dashboard-title {
+    font-size: 22px;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+
+  .dashboard-tabs {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+
+  .tab-btn {
+    padding: 8px 12px;
+    font-size: 13px;
+    flex: 1 1 calc(50% - 10px);
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  /* Forms & Task Posting */
+  .task-container {
+    padding: 20px 15px;
+  }
+
+  .task-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  /* Profile page layout */
+  .profile-container {
+    padding: 20px 15px;
+  }
+
+  .profile-card {
+    padding: 25px 20px;
+    box-sizing: border-box;
+  }
+
+  /* Modals Overlay & Content */
+  .modal-content {
+    padding: 20px 15px !important;
+    border-radius: 12px !important;
+  }
+
+  /* Applicant Chip & Cards */
+  .applicant-list {
+    justify-content: center;
+  }
+
+  .applicant-card {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Task cards in grid */
+  .task-card-modern {
+    padding: 15px;
+  }
+
+  .task-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .task-header h3 {
+    font-size: 18px;
+    margin: 0;
+  }
+
+  .task-meta {
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Search & Filters */
+  .search-container {
+    gap: 10px;
+  }
+
+  .filter-group {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .filter-input {
+    width: 100%;
+    min-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .clear-btn {
+    width: 100%;
+    box-sizing: border-box;
+  }
 }
